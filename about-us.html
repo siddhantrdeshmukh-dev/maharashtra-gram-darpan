@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px; /* Rounded shape */
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+        
+        /* New styling for the embedded image */
+        .story-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <img src="images\IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) - Hidden on mobile/tablet (lg), Flex on lg+ -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center"> 
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button - Visible on mobile/tablet, Hidden on lg+ -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <div class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Our Story, Commitment, and Philosophy</h2>
+                    <p class="text-xl text-primary font-semibold">Creating Strong, Independent Societies for Sustainable Rural Development</p>
+                </div>
+
+                <!-- New Structure: Two-Column Layout (Story and VMG) -->
+                <div class="grid lg:grid-cols-3 gap-12">
+
+                    <!-- Column 1: Expanded About/Story -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">About Maharashtra Gram Darpan</h3>
+                        
+                        <!-- Added a compelling placeholder image to break up text -->
+                        <img src="images\group2.jpg" 
+                            alt="Image representing rural community development" 
+                            class="story-image">
+                        
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            Maharashtra Gram Darpan (MGD) stands as a leading institute dedicated to holistic rural development, encompassing crucial sectors such as Medical, Educational, Agriculture, Technical, Animal Management, and Cultural programs. Established with a profound vision, MGD has continuously worked towards empowering underprivileged communities across India.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            We are actively involved in promoting public health through essential services like water supply and sanitation, including the establishment of sustainable economic latrine systems. Our commitment extends to social welfare through various programs focused on women and child development. MGD successfully established production centers for economic latrines at Amravati and Tiwsa, contributing to public sanitation infrastructure.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed font-semibold border-l-4 border-secondary pl-4 py-2">
+                            Our work has garnered recognition, including the 'Yuva' Co-operative Institute receiving the first Award from the Govt. of Maharashtra. Our suggestions regarding rural development have been acknowledged and implemented by the Government, showcasing the practical impact and expertise of our teams, which include experts in construction, technicians, and retired government officers.
+                        </p>
+                    </div>
+
+                    <!-- Column 2: VMG (Vision, Mission, Goal) - Stacked Cards -->
+                    <div class="lg:col-span-1 space-y-8">
+                        
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">Our Guiding Principles</h3>
+
+                        <!-- Vision -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg border-l-4 border-primary">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Vision: Strong & Independent Society</h4>
+                            <p class="text-gray-600 text-base">We are committed to creating a strong and independent society free from inequalities and discrimination, where every individual enjoys equal opportunities for growth and prosperity.</p>
+                        </div>
+                        <!-- Mission -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg" style="border-left: 4px solid var(--color-secondary);">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Mission: Equitable Living Environment</h4>
+                            <p class="text-gray-600 text-base">To foster a democratic and equitable living environment where all vulnerable people, especially underprivileged women and children, have access to Education, Health, Sustainable Livelihood opportunities, and essential infrastructure services, irrespective of their economic and social status.</p>
+                        </div>
+                        <!-- Goal -->
+                        <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-primary">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Goal: Financial Strengthening & Awareness</h4>
+                            <p class="text-gray-600 text-base">Overall socio-economic development of underprivileged people, especially women and children, through prophetic training and increased awareness. Our aim is to better the life of villages by facilitating their financial strengthening and self-sufficiency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <div class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">आमची कथा, बांधिलकी आणि तत्त्वज्ञान</h2>
+                    <p class="text-xl text-primary font-semibold">शाश्वत ग्रामीण विकासासाठी मजबूत, स्वतंत्र समाज निर्माण करणे</p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-12">
+
+                    <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">महाराष्ट्र ग्राम दर्पण बद्दल</h3>
+                        
+                        <img src="images\group2.jpg" 
+                            alt="ग्रामीण विकास समुदायाचे प्रतिनिधित्व करणारी प्रतिमा" 
+                            class="story-image">
+                        
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            महाराष्ट्र ग्राम दर्पण (MGD) ही वैद्यकीय, शैक्षणिक, कृषी, तांत्रिक, पशु व्यवस्थापन आणि सांस्कृतिक कार्यक्रमांसारख्या महत्त्वपूर्ण क्षेत्रांचा समावेश असलेल्या समग्र ग्रामीण विकासासाठी समर्पित अग्रगण्य संस्था आहे. एका सखोल दृष्टिकोनातून स्थापित, MGD ने संपूर्ण भारतातील वंचित समुदायांना सशक्त करण्यासाठी सतत कार्य केले आहे.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            आम्ही पाणीपुरवठा आणि स्वच्छता यांसारख्या आवश्यक सेवांद्वारे सार्वजनिक आरोग्य वाढविण्यात सक्रियपणे गुंतलो आहोत, ज्यामध्ये टिकाऊ आर्थिक शौचालय प्रणालीची स्थापना समाविष्ट आहे. आमची बांधिलकी महिला आणि बाल विकासावर केंद्रित विविध सामाजिक कल्याणकारी कार्यक्रमांपर्यंत विस्तारलेली आहे. MGD ने अमरावती आणि तिवासा येथे आर्थिक शौचालयांसाठी उत्पादन केंद्रे यशस्वीरित्या स्थापित केली, ज्यामुळे सार्वजनिक स्वच्छता पायाभूत सुविधांना हातभार लागला.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed font-semibold border-l-4 border-secondary pl-4 py-2">
+                            आमच्या कामाला मान्यता मिळाली आहे, ज्यात संस्थेच्या 'युवा' सहकारी संस्थेला महाराष्ट्र शासनाकडून प्रथम पुरस्कार मिळाला आहे. ग्रामीण विकासासंबंधी आमच्या सूचना शासनाने मान्य केल्या आणि त्यांची अंमलबजावणी केली, जे आमच्या टीममधील बांधकाम तज्ज्ञ, तंत्रज्ञ आणि सेवानिवृत्त सरकारी अधिकारी यांच्या कौशल्याचा आणि परिणामाचा पुरावा आहे.
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-1 space-y-8">
+                        
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">आमची मार्गदर्शक तत्त्वे</h3>
+
+                        <!-- Vision -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg border-l-4 border-primary">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">दृष्टी: मजबूत आणि स्वतंत्र समाज</h4>
+                            <p class="text-gray-600 text-base">असमानता आणि भेदभावांशिवाय मजबूत आणि स्वतंत्र समाज निर्माण करण्यासाठी आम्ही वचनबद्ध आहोत, जिथे प्रत्येक व्यक्तीला वाढ आणि समृद्धीसाठी समान संधी मिळतील.</p>
+                        </div>
+                        <!-- Mission -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg" style="border-left: 4px solid var(--color-secondary);">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">ध्येय: न्याय्य जीवन वातावरण</h4>
+                            <p class="text-gray-600 text-base">लोकशाही आणि न्याय्य जीवन वातावरण वाढवणे, जिथे सर्व असुरक्षित लोकांना, विशेषतः वंचित महिला आणि मुलांना, त्यांच्या आर्थिक आणि सामाजिक स्थितीची पर्वा न करता शिक्षण, आरोग्य, शाश्वत उपजीविकेची संधी आणि आवश्यक पायाभूत सुविधा सेवा मिळतील.</p>
+                        </div>
+                        <!-- Goal -->
+                        <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-primary">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">उद्देश: आर्थिक बळकटीकरण आणि जागरूकता</h4>
+                            <p class="text-gray-600 text-base">भविष्यवेधी प्रशिक्षण आणि जागरूकता वाढवून वंचित लोकांचा, विशेषतः महिला आणि मुलांचा, सर्वांगीण सामाजिक/आर्थिक विकास करणे. गावकऱ्यांचे आर्थिक बळकटीकरण करून त्यांचे जीवनमान सुधारणे हे आमचे उद्दिष्ट आहे.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">Our Story</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <p class="text-sm text-gray-400">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // --- LANGUAGE TRANSLATION LOGIC ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang_about'; // Unique key for this page
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-text');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

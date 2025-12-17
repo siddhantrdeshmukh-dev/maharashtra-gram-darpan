@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Work - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px; /* Rounded shape */
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+        
+        /* New styling for the embedded image */
+        .objective-icon-img {
+            width: 80px; 
+            height: 80px; 
+            margin: 0 auto 0.75rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--color-secondary);
+        }
+
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <img src="images\IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) - Hidden on mobile/tablet (lg), Flex on lg+ -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button - Visible on mobile/tablet, Hidden on lg+ -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Our Core Aim & Approach</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto mb-6">
+                        Maharashtra Gram Darpan is a Voluntary Organisation working for Education, Health, Social, Sanitation Awareness & Women Empowerment in the Underprivileged Communities.
+                    </p>
+                    <p class="text-lg text-gray-700 max-w-4xl mx-auto">
+                        MGD's core approach is built upon a philosophy of empowering communities by evolving knowledge and creating essential linkages between villagers and the government. We believe that providing accurate information leads to critical awareness, which in turn catalyzes self-development, empowerment, and sustainable local action.
+                    </p>
+                </div>
+
+                <!-- Objectives Grid -->
+                <div class="text-center mt-12">
+                    <h3 class="text-3xl font-extrabold mb-8 text-gray-900 border-b border-primary/50 inline-block pb-2">Key Objectives</h3>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        
+                        <!-- Objective Card 1: Education -->
+                        <div class="p-6 bg-white rounded-xl card-shadow">
+                            <img class="objective-icon-img" src="images\education.png" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Edu';" 
+                                 alt="Education Icon">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">Quality Education Access</h5>
+                            <p class="text-base text-gray-600">We work to ensure underprivileged children and women across rural areas gain access to quality educational and vocational training. This focus extends beyond basic literacy to technical and skill-based learning recognized by the Maharashtra Board of Vocational Education.</p>
+                        </div>
+                        
+                        <!-- Objective Card 2: Health & Sanitation -->
+                        <div class="p-6 bg-white rounded-xl card-shadow">
+                            <img class="objective-icon-img" src="images\water.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Health';" 
+                                 alt="Health & Sanitation Icon">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">Public Health & Hygiene</h5>
+                            <p class="text-base text-gray-600">Promoting health awareness (including AIDS awareness for ASHA workers), village cleanliness, and vital sanitation programs like economic latrine systems. We also provide essential free medical services through Maha Arogya Shibir (Mega Health Camps).</p>
+                        </div>
+                        
+                        <!-- Objective Card 3: Women Empowerment -->
+                        <div class="p-6 bg-white rounded-lg card-shadow">
+                            <img class="objective-icon-img" src="images\women.jpeg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=SHG';" 
+                                 alt="Women Empowerment Icon">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">Self-Reliance & Livelihood</h5>
+                            <p class="text-base text-gray-600">Strengthening women through the formation of Self-Help Groups (SHGs), facilitating NABFIN loans for livelihood activities (like flour mills and animal husbandry), and conducting leadership training.</p>
+                        </div>
+                        
+                        <!-- Objective Card 4: Linkage & Awareness -->
+                        <div class="p-6 bg-white rounded-lg card-shadow">
+                            <img class="objective-icon-img" src="images\awerness.webp" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Link';" 
+                                 alt="Linkage & Awareness Icon">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">Government Scheme Facilitation</h5>
+                            <p class="text-base text-gray-600">We act as a critical link, evolving information, conducting widespread awareness campaigns (including Krishi Melavas like Shankar Pat), and ensuring rural communities access and benefit from state and central government development schemes.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">आमचे मुख्य उद्दिष्ट आणि दृष्टिकोन</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto mb-6">
+                        महाराष्ट्र ग्राम दर्पण ही वंचित समुदायांमध्ये, विशेषतः मुले आणि महिलांमध्ये शिक्षण, आरोग्य, सामाजिक, स्वच्छता जागरूकता आणि महिला सक्षमीकरणासाठी कार्यरत असलेली एक स्वयंसेवी संस्था आहे.
+                    </p>
+                    <p class="text-lg text-gray-700 max-w-4xl mx-auto">
+                        ग्रामस्थ आणि सरकार यांच्यात माहिती विकसित करणे आणि समन्वय साधणे या उद्देशाने MGD ने सुरुवात केली. ज्ञानामुळे जागरूकता येते, आणि त्यातून आत्म-विकास, सक्षमीकरण आणि कृती होते, असा आमचा विश्वास आहे.
+                    </p>
+                </div>
+
+                <!-- Objectives Grid (Marathi) -->
+                <div class="text-center mt-12">
+                    <h3 class="text-3xl font-extrabold mb-8 text-gray-900 border-b border-primary/50 inline-block pb-2">मुख्य उद्दिष्टे</h3>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        
+                        <!-- Objective Card 1: Education -->
+                        <div class="p-6 bg-white rounded-xl card-shadow">
+                            <img class="objective-icon-img" src="images\education.png" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Edu';" 
+                                 alt="शिक्षण चिन्ह">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">गुणवत्तापूर्ण शिक्षण प्रवेश</h5>
+                            <p class="text-base text-gray-600">ग्रामीण भागातील वंचित मुले आणि महिलांना गुणवत्तापूर्ण शिक्षण आणि व्यावसायिक प्रशिक्षण मिळेल याची खात्री करण्यासाठी आम्ही काम करतो. यात मूलभूत साक्षरतेपलीकडे महाराष्ट्र व्यावसायिक शिक्षण मंडळाने मान्यता दिलेल्या तांत्रिक आणि कौशल्य-आधारित शिक्षणावर लक्ष केंद्रित केले जाते.</p>
+                        </div>
+                        
+                        <!-- Objective Card 2: Health & Sanitation -->
+                        <div class="p-6 bg-white rounded-xl card-shadow">
+                            <img class="objective-icon-img" src="images\water.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Health';" 
+                                 alt="आरोग्य आणि स्वच्छता चिन्ह">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">सार्वजनिक आरोग्य आणि स्वच्छता</h5>
+                            <p class="text-base text-gray-600">आरोग्य जागरूकता (आशा सेविकांसाठी एड्स जागरूकतासह), गाव स्वच्छता आणि आर्थिक शौचालये प्रणालीसारख्या महत्त्वपूर्ण स्वच्छता कार्यक्रमांना प्रोत्साहन देणे. आम्ही महा आरोग्य शिबिरांमधून (मेगा आरोग्य शिबिरे) आवश्यक मोफत वैद्यकीय सेवा देखील पुरवतो.</p>
+                        </div>
+                        
+                        <!-- Objective Card 3: Women Empowerment -->
+                        <div class="p-6 bg-white rounded-lg card-shadow">
+                            <img class="objective-icon-img" src="images\women.jpeg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=SHG';" 
+                                 alt="महिला सक्षमीकरण चिन्ह">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">आत्मनिर्भरता आणि उपजीविका</h5>
+                            <p class="text-base text-gray-600">महिला बचत गट (SHGs) स्थापन करून, उपजीविका गतिविधींसाठी NABFIN कर्जासाठी (पीठ गिरण्या आणि पशुसंवर्धनासारख्या) मदत करणे आणि नेतृत्व प्रशिक्षण आयोजित करून महिलांना बळकट करणे.</p>
+                        </div>
+                        
+                        <!-- Objective Card 4: Linkage & Awareness -->
+                        <div class="p-6 bg-white rounded-lg card-shadow">
+                            <img class="objective-icon-img" src="images\awerness.webp" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Link';" 
+                                 alt="जोडणी आणि जागरूकता चिन्ह">
+                            <h5 class="font-semibold text-xl mb-2 text-primary">शासकीय योजनांची सुलभता</h5>
+                            <p class="text-base text-gray-600">आम्ही एक महत्त्वपूर्ण दुवा म्हणून कार्य करतो, माहिती विकसित करतो, व्यापक जागरूकता मोहिमा (शंकर पाटसारख्या कृषी मेळाव्यांसह) आयोजित करतो आणि ग्रामीण समुदायांना राज्य आणि केंद्र सरकारच्या विकास योजनांचा लाभ मिळतो याची खात्री करतो.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">About Us</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <p class="text-sm text-gray-400">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // --- LANGUAGE TRANSLATION LOGIC ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang_ourwork'; // Unique key for this page
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

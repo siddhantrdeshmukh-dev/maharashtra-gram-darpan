@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maharashtra Gram Darpan - Rural Development NGO</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; /* Reverted to Light Greenish Background */
+            --color-text: #1F2937; /* Dark Gray */
+            --color-alt-row: #F7FDF7; /* Light alternating color for tables */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Reverting body background to light greenish color */
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        /* Ensure the header/main elements use the body background color or white */
+        header {
+            background-color: white;
+        }
+
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .hover-bg-primary:hover { background-color: var(--color-primary); }
+        .border-primary { border-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            /* Shadow color based on the primary color */
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(6, 95, 70, 0.2), 0 10px 10px -5px rgba(6, 95, 70, 0.1);
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #044F36; /* Darker green for hover */
+            transform: scale(1.05);
+        }
+
+        /* Responsive table styling */
+        .responsive-table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px; /* Ensures readability on small screens */
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .data-table th {
+            background-color: #ECFDF5; /* Lightest green for header */
+            font-weight: 700;
+            color: var(--color-primary); /* Dark green text */
+        }
+        /* Style for alternating rows */
+        .data-table tbody tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: var(--color-alt-row); /* Use light color for striping */
+        }
+        /* Style for the icon placeholders using images */
+        .objective-icon-img {
+            /* Increased size for objective icons */
+            width: 80px; 
+            height: 80px; 
+            margin: 0 auto 0.75rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--color-secondary);
+        }
+
+        /* Loading spinner CSS */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* CSS for YouTube Background Video */
+        .video-background-holder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 0;
+            transform: translateX(-50%) translateY(-50%);
+            overflow: hidden;
+        }
+
+        .video-background-holder iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* Maintain aspect ratio and cover container */
+            width: 100vw; 
+            height: 56.25vw; /* 16:9 aspect ratio (9/16 = 0.5625) */
+            min-height: 100%;
+            min-width: 177.77%; /* 100 / 0.5625 */
+            transform: translate(-50%, -50%);
+        }
+
+        /* Ensure hero section is relatively positioned for video and set fixed padding for height */
+        #home, #home-mr {
+            background-color: transparent !important; /* Managed by video/overlay */
+            position: relative;
+            z-index: 1; /* Ensure sections stay above footer/header if scroll occurs */
+            padding-top: 6rem; /* Adjusting padding for increased height */
+            padding-bottom: 6rem; /* Adjusting padding for increased height */
+        }
+
+        @media (min-width: 768px) {
+             #home, #home-mr {
+                padding-top: 10rem;
+                padding-bottom: 10rem;
+            }
+        }
+        
+        /* Ensure text is white over the video overlay */
+        #home h1, #home h1 span, #home p, #home-mr h1, #home-mr h1 span, #home-mr p {
+            color: white !important; 
+        }
+
+        /* Adjust button background for contrast on hero section */
+        #home .inline-flex, #home-mr .inline-flex {
+            background-color: transparent !important;
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        #home .inline-flex:hover, #home-mr .inline-flex:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* --- PRESS SECTION SCROLLING STYLES --- */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .scrolling-wrapper {
+            display: flex;
+            width: max-content;
+            /* Adjusted duration for more items */
+            animation: scroll 60s linear infinite; 
+        }
+        
+        .scrolling-wrapper:hover {
+            animation-play-state: paused;
+        }
+
+        .news-card {
+            width: 320px;
+            flex-shrink: 0;
+            margin-right: 2rem;
+        }
+        
+        .news-img {
+            width: 100%;
+            height: 400px; /* Increased height slightly for better visibility without text */
+            object-fit: cover;
+            object-position: top;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Removed negative margins for better alignment -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <!-- Logo Placeholder: w-16 h-16 -->
+                        <img src="images\IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) - Adjusted for responsiveness: Hidden on md, Flex on lg -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center"> 
+                    <a href="index.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                    <!-- Removed Donate button -->
+                </nav>
+
+                <!-- Mobile Menu Button - Show on md, Hide on lg -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default, shown on small/medium screens) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+                <!-- Removed Donate link -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <!-- Hero Section (index.html content) -->
+        <section id="home" class="relative py-20 md:py-32 overflow-hidden">
+            <!-- Background Video Embed - ACTUAL VIDEO ID ADDED -->
+            <div class="video-background-holder">
+                <!-- Video ID: 3G_mAx7OpIo -->
+                <iframe src="https://www.youtube.com/embed/3G_mAx7OpIo?controls=0&amp;showinfo=0&amp;rel=0&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;playlist=3G_mAx7OpIo" 
+                        frameborder="0" allow="autoplay; encrypted-media; loop; mute" allowfullscreen></iframe>
+            </div>
+            <!-- Overlay to ensure text readability -->
+            <div class="absolute inset-0 bg-gray-900 opacity-60"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 text-white">
+                <!-- Increased Hero Heading size: text-5xl sm:text-7xl -->
+                <h1 class="text-5xl sm:text-7xl font-extrabold leading-tight mb-4">
+                    Empowering Rural India, One Village at a Time
+                </h1>
+                <!-- Increased Hero Paragraph size: text-xl sm:text-2xl -->
+                <p class="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
+                    Maharashtra Gram Darpan is a leading institute committed to rural development, focusing on medical, educational, agriculture, and women's empowerment programs across India.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="programmes.html" class="btn-primary text-lg">View Our Programmes</a>
+                    <a href="about-us.html" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-full bg-transparent hover:bg-white/10 transition duration-150 ease-in-out text-lg">
+                        Learn Our Story
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Our Story & Commitment</h2>
+                    <p class="text-xl text-primary font-semibold">Creating Strong, Independent Societies</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-primary">About Maharashtra Gram Darpan</h3>
+                        <p class="mb-4 text-gray-700 text-lg">The leading Institute in the rural development, Medical, Educational, Agriculture, Technical and Animal Management and Cultural programme. We are actively engaged in water supply and sanitation, economic latrines system and organizing various programs on women and child welfare.</p>
+                        <p class="mb-4 text-gray-700 text-lg">We established production centers for economic latrines at Amravati and Tiwsa. The Co-operative Institute ‘Yuva’ of this institute was given the first Award by the Govt. of Maharashtra. Our work has been appreciated by Hon’ble Shree Anna Saheb Dange, the Minister for Rural Development, and some of our suggestions were accepted and implemented by the Government.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <!-- Vision -->
+                        <div class="p-6 bg-white rounded-lg card-shadow border-l-4 border-primary">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Vision</h4>
+                            <p class="text-gray-600 text-lg">We are committed to creating a strong and independent society without inequalities and discrimination, where everybody enjoys equal opportunities.</p>
+                        </div>
+                        <!-- Mission -->
+                        <div class="p-6 bg-white rounded-lg card-shadow" style="border-left: 4px solid var(--color-secondary);">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Mission</h4>
+                            <p class="text-gray-600 text-lg">To Foster a Democratic & Equitable Living Environment, where all vulnerable people, especially underprivileged women and children, have access to Education, Health, Sustainable Livelihood opportunity and essential infrastructure services irrespective of their economic and social status.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Work Section -->
+        <section id="our-work" class="py-16 md:py-24" style="background-color: #F0FAF0;">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">Our Aim & Objectives</h2>
+                <p class="text-xl text-primary font-semibold max-w-4xl mx-auto mb-10">
+                    Maharashtra Gram Darpan is a Voluntary Organisation working for Education, Health, Social, Sanitation Awareness & Women Empowerment in the Underprivileged Communities, especially with Children And Women.
+                </p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="p-6 bg-white rounded-lg card-shadow">
+                        <img class="objective-icon-img" src="images\education.png" onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Edu';" alt="Education Icon">
+                        <h5 class="font-semibold text-xl mb-1">Education</h5>
+                        <p class="text-base text-gray-600">Access to quality education for underprivileged children and women.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg card-shadow">
+                        <img class="objective-icon-img" src="images\water.jpg" onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Health';" alt="Health & Sanitation Icon">
+                        <h5 class="font-semibold text-xl mb-1">Health & Sanitation</h5>
+                        <p class="text-base text-gray-600">Promoting awareness, cleanliness, and providing free health services.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg card-shadow">
+                        <img class="objective-icon-img" src="images\women.jpeg" onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=SHG';" alt="Women Empowerment Icon">
+                        <h5 class="font-semibold text-xl mb-1">Women Empowerment</h5>
+                        <p class="text-base text-gray-600">Strengthening women through SHGs, skill training, and livelihood support.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg card-shadow">
+                        <img class="objective-icon-img" src="images\awerness.webp" onerror="this.onerror=null; this.src='https://placehold.co/80x80/9CA3AF/ffffff?text=Link';" alt="Linkage & Awareness Icon">
+                        <h5 class="font-semibold text-xl mb-1">Linkage & Awareness</h5>
+                        <p class="text-base text-gray-600">Evolving information and making linkages between villagers and the government.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Programmes Section -->
+        <section id="programmes" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Key Programmes & Initiatives</h2>
+                    <p class="text-xl text-primary font-semibold">Driving Change Across Health, Livelihood, and Environment</p>
+                </div>
+
+                <div class="space-y-12">
+                    <!-- Condensed Programme Items -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <h3 class="text-2xl font-bold mb-4 text-primary">Women Self Help Groups (SHGs)</h3>
+                        <p class="text-gray-700 mb-4 text-lg">Since 2010, we have empowered women through health camps, legal guidance, and sports. We facilitate NABFIN loans for livelihoods like flour mills and animal husbandry, ensuring financial independence through regular training.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl card-shadow" style="border-left: 8px solid var(--color-secondary);">
+                        <h3 class="text-2xl font-bold mb-4" style="color: var(--color-secondary);">Water & Sanitation (Jal-Jivan & Swachh Bharat)</h3>
+                        <p class="text-gray-700 mb-4 text-lg">We implement government water and sanitation programs in Amravati, Gondia, and Hingoli, focusing on water quality, rainwater harvesting, and waste management.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trustees/Board Section -->
+        <section id="trustees-board" class="py-16 md:py-24" style="background-color: #F0FAF0;">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">Governing Body & Leadership</h2>
+                <p class="text-xl text-primary font-semibold max-w-2xl mx-auto mb-10">Our leadership team brings expertise and passion to drive our mission forward.</p>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="p-6 bg-white rounded-lg card-shadow text-center">
+                        <img src="images\aatya.jpg" onerror="this.onerror=null; this.src='https://placehold.co/128x128/9CA3AF/ffffff?text=Image+Missing';" alt="Dr. Megha Pramod Raut" class="w-32 h-32 rounded-full mx-auto object-cover mb-4 border-4 border-primary shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Dr. Megha Pramod Raut</h3>
+                        <p class="text-primary font-semibold mb-3">Founder</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg card-shadow text-center">
+                        <img src="images\baba.jpg" onerror="this.onerror=null; this.src='https://placehold.co/128x128/9CA3AF/ffffff?text=Image+Missing';" alt="Mr. Ravindra Himmatrao Deshmukh" class="w-32 h-32 rounded-full mx-auto object-cover mb-4 border-4 border-primary shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Mr. Ravindra Himmatrao Deshmukh</h3>
+                        <p class="text-primary font-semibold mb-3">Chief Functionary</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRESS COVERAGE SECTION (UPDATED with 15 Images & No Text) -->
+        <section id="press" class="py-16 md:py-24 bg-white border-t border-gray-200 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-2">In the News</h3>
+                    <p class="text-lg text-primary font-medium">Highlighting our impact through media coverage.</p>
+                </div>
+                
+                <!-- Scrolling Container -->
+                <div class="relative w-full overflow-hidden">
+                    <div class="scrolling-wrapper">
+                        <!-- Image 1 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+1';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Image 2 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+2';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Image 3 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\3.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+3';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Image 4 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\4.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+4';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Image 5 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\5.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+5';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 6 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\6.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+6';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 7 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\7.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+7';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 8 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\8.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+8';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 9 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\9.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+9';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 10 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\10.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+10';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 11 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\11.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+11';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 12 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\12.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+12';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 13 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\13.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+13';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 14 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\14.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+14';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 15 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images\scroll\15.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+15';" alt="News" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="View Full Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Get In Touch</h2>
+                    <p class="text-xl text-primary font-semibold mb-6">We would love to hear from you or collaborate on a project.</p>
+                    <a href="contact.html" class="btn-primary inline-block text-lg shadow-lg">Contact Us</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <!-- Hero Section Marathi -->
+        <section id="home-mr" class="relative py-20 md:py-32 overflow-hidden">
+            <!-- Background Video Embed - ACTUAL VIDEO ID ADDED -->
+            <div class="video-background-holder">
+                <!-- Video ID: 3G_mAx7OpIo -->
+                <iframe src="https://www.youtube.com/embed/3G_mAx7OpIo?controls=0&amp;showinfo=0&amp;rel=0&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;playlist=3G_mAx7OpIo" 
+                        frameborder="0" allow="autoplay; encrypted-media; loop; mute" allowfullscreen></iframe>
+            </div>
+            <!-- Overlay to ensure text readability -->
+            <div class="absolute inset-0 bg-gray-900 opacity-60"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 text-white">
+                <h1 class="text-5xl sm:text-7xl font-extrabold leading-tight mb-4">
+                    ग्रामीण भारताला सक्षम करणे, एका वेळी एक गाव
+                </h1>
+                <p class="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
+                    महाराष्ट्र ग्राम दर्पण ही वैद्यकीय, शैक्षणिक, कृषी आणि महिला सक्षमीकरण कार्यक्रमांवर लक्ष केंद्रित करून, संपूर्ण भारतात ग्रामीण विकासासाठी समर्पित अग्रगण्य संस्था आहे.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="programmes.html" class="btn-primary text-lg">आमचे कार्यक्रम पहा</a>
+                    <a href="about-us.html" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-full bg-transparent hover:bg-white/10 transition duration-150 ease-in-out text-lg">
+                        आमची कथा जाणून घ्या
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about-mr" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">आमची कथा आणि बांधिलकी</h2>
+                    <p class="text-xl text-primary font-semibold">मजबूत, स्वतंत्र समाज निर्माण करणे</p>
+                </div>
+                <!-- ... Marathi About Content (Kept as is) ... -->
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-primary">महाराष्ट्र ग्राम दर्पण बद्दल</h3>
+                        <p class="mb-4 text-gray-700 text-lg">ग्रामीण विकास, वैद्यकीय, शैक्षणिक, कृषी, तांत्रिक आणि पशु व्यवस्थापन आणि सांस्कृतिक कार्यक्रमांमधील अग्रगण्य संस्था. आम्ही पाणीपुरवठा आणि स्वच्छता, आर्थिक शौचालये प्रणाली आणि महिला व बाल कल्याण यावर विविध कार्यक्रम आयोजित करण्यात सक्रिय आहोत.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="p-6 bg-white rounded-lg card-shadow border-l-4 border-primary">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">दृष्टी (Vision)</h4>
+                            <p class="text-lg text-gray-600">असमानता आणि भेदभावांशिवाय मजबूत आणि स्वतंत्र समाज निर्माण करण्यासाठी आम्ही वचनबद्ध आहोत.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRESS COVERAGE SECTION (MARATHI) -->
+        <section id="press-mr" class="py-16 md:py-24 bg-white border-t border-gray-200 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-2">बातम्यांमध्ये</h3>
+                    <p class="text-lg text-primary font-medium">प्रसारमाध्यमांनी घेतलेली आमच्या कामाची दखल.</p>
+                </div>
+                
+                <!-- Scrolling Container -->
+                <div class="relative w-full overflow-hidden">
+                    <div class="scrolling-wrapper">
+                        <!-- Image 1 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१';" alt="News: Water" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 2 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+२';" alt="News: Health" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 3 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/3.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+३';" alt="News: Women" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 4 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-majri1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+४';" alt="News: Majri" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 5 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-hingoli1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+५';" alt="News: Hingoli" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 6 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-gondia1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+६';" alt="News: Gondia" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 7 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-dharani1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+७';" alt="News: Dharani" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 8 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-tivasa1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+८';" alt="News: Tivasa" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 9 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+९';" alt="News: Health" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 10 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-majri2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१०';" alt="News: Majri" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 11 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-hingoli2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+११';" alt="News: Hingoli" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 12 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-gondia2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१२';" alt="News: Gondia" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 13 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-dharani2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१३';" alt="News: Dharani" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 14 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news-tivasa2.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१४';" alt="News: Tivasa" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                        <!-- Image 15 -->
+                        <div class="news-card bg-white p-4 rounded-xl card-shadow">
+                            <div class="relative group">
+                                <img src="images/news3.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१५';" alt="News: Women" class="news-img">
+                                <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" title="पूर्ण प्रतिमा पहा"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact-mr" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">संपर्क साधा</h2>
+                    <p class="text-xl text-primary font-semibold mb-6">आम्हाला तुमच्याकडून ऐकण्यास किंवा प्रकल्पात सहयोग करण्यास आवडेल.</p>
+                    <a href="contact.html" class="btn-primary inline-block text-lg shadow-lg">आमच्याशी संपर्क साधा</a>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+    <!-- Image Modal Structure (Shared) -->
+    <div id="image-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeImageModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-gray-500 text-3xl font-bold focus:outline-none" onclick="closeImageModal()">
+                        &times;
+                    </button>
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left">
+                        <img id="modal-image" src="" alt="Full View" class="w-full h-auto rounded-md object-contain max-h-[80vh]">
+                        <p id="modal-caption" class="mt-2 text-sm text-gray-500 text-center font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">Our Story</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <p class="text-sm text-gray-400">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- IMAGE MODAL LOGIC (New) ---
+        function openImageModal(src, alt) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            const modalCaption = document.getElementById('modal-caption');
+
+            modalImg.src = src;
+            modalCaption.textContent = alt || 'News Image';
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- LANGUAGE TRANSLATION LOGIC (Simplified to toggle embedded content) ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang';
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-text');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                buttonTextElement.textContent = 'English (EN)';
+                mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                buttonTextElement.textContent = 'मराठी (MR)';
+                mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                buttonTextElement.textContent = 'English (EN)';
+                mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                buttonTextElement.textContent = 'मराठी (MR)';
+                mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle (kept original functionality)
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Simple scroll function for section navigation on the main page (index.html)
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                // Check if the link points to a section on the current index page
+                if (href.startsWith('index.html#') || href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.split('#').pop();
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
